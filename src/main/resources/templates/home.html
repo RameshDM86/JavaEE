@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Home · CATS</title>
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+	<header th:replace="~{fragments/header :: bar}"></header>
+	<main class="page">
+		<section class="card">
+			<h1 th:text="'Welcome, ' + ${user.name}">Welcome</h1>
+			<p class="lede" th:text="${user.role.label} + ' · ' + ${user.userId}">Role</p>
+		</section>
+
+		<section class="card next" th:if="${showEmployeeMenu}">
+			<h2>Employee</h2>
+			<ul>
+				<li><a th:href="@{/courses/new}">Apply for a course</a></li>
+				<li><a th:href="@{/courses/history}">View personal course history</a></li>
+			</ul>
+		</section>
+
+		<section class="card next" th:if="${showManagerMenu}">
+			<h2>Manager</h2>
+			<ul>
+				<li><a th:href="@{/manager/approvals}">View course applications for approval</a></li>
+				<li><a th:href="@{/manager/history}">Subordinate course history</a></li>
+			</ul>
+		</section>
+
+		<section class="card next" th:if="${showAdminMenu}">
+			<h2>Administrator</h2>
+			<p class="muted">Employee, course catalogue, holiday, and budget maintenance are the optional admin screens.</p>
+		</section>
+	</main>
+</body>
+</html>

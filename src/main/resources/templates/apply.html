@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title th:text="${applicationId == null} ? 'Apply for a course · CATS' : 'Update application · CATS'">Apply</title>
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+	<header th:replace="~{fragments/header :: bar}"></header>
+	<main class="page">
+		<section class="card">
+			<h1 th:text="${applicationId == null} ? 'Apply for a course' : 'Update application'">Apply</h1>
+			<p class="lede" th:if="${usage != null}">
+				Training days used this year:
+				<span th:text="${usage.daysUsed}">0</span>
+				of
+				<span th:text="${usage.dayEntitlement}">0</span>.
+				Budget used:
+				$<span th:text="${usage.budgetUsed}">0</span>
+				of
+				$<span th:text="${usage.annualBudget}">0</span>.
+			</p>
+			<ul class="errors" th:if="${errors != null}">
+				<li th:each="error : ${errors}" th:text="${error}">Error</li>
+			</ul>
+			<form class="stack" th:action="${applicationId == null} ? @{/courses} : @{/courses/{id}(id=${applicationId})}" method="post">
+				<label for="title">Course title</label>
+				<input id="title" name="title" th:value="${form.title}" required maxlength="150">
+
+				<label for="category">Course category</label>
+				<select id="category" name="category" required>
+					<option value="">Select a category</option>
+					<option th:each="category : ${categories}" th:value="${category}" th:text="${category.label}"
+						th:selected="${category.name() == form.category}"></option>
+				</select>
+
+				<label for="provider">Training provider</label>
+				<input id="provider" name="provider" th:value="${form.provider}" required maxlength="120">
+
+				<label for="startDate">From</label>
+				<input id="startDate" name="startDate" type="date" th:value="${form.startDate}" required>
+
+				<label for="endDate">To</label>
+				<input id="endDate" name="endDate" type="date" th:value="${form.endDate}" required>
+
+				<label for="sessionType">Session length</label>
+				<select id="sessionType" name="sessionType" required>
+					<option value="">Select session length</option>
+					<option th:each="length : ${sessionTypes}" th:value="${length}" th:text="${length.label}"
+						th:selected="${length.name() == form.sessionType}"></option>
+				</select>
+
+				<label for="fee">Course fee (0 for internal training)</label>
+				<input id="fee" name="fee" th:value="${form.fee}" inputmode="decimal">
+
+				<label for="justification">Justification</label>
+				<textarea id="justification" name="justification" required maxlength="1000" th:text="${form.justification}"></textarea>
+
+				<label for="dissemination">Work dissemination during the course</label>
+				<textarea id="dissemination" name="dissemination" maxlength="1000" th:text="${form.dissemination}"></textarea>
+
+				<button type="submit" th:text="${applicationId == null} ? 'Submit application' : 'Save update'">Submit</button>
+			</form>
+		</section>
+	</main>
+</body>
+</html>

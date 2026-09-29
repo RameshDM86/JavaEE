@@ -1,0 +1,16 @@
+<header th:fragment="bar" class="topbar">
+	<a class="brand" th:href="@{/home}">CATS</a>
+	<div class="brand-sub">Course Application Tracking System</div>
+	<nav>
+		<a th:if="${showEmployeeMenu}" th:href="@{/courses/new}">Apply</a>
+		<a th:if="${showEmployeeMenu}" th:href="@{/courses/history}">My courses</a>
+		<a th:if="${showManagerMenu}" th:href="@{/manager/approvals}">Approvals</a>
+		<a th:if="${showManagerMenu}" th:href="@{/manager/history}">Team history</a>
+	</nav>
+	<div class="topbar-user">
+		<span th:text="${user.name} + ' · ' + ${user.role.label}">Name</span>
+		<form class="inline" th:action="@{/logout}" method="post">
+			<button type="submit">Sign out</button>
+		</form>
+	</div>
+</header>

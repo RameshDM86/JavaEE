@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Administrator login · CATS</title>
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+	<header class="topbar">
+		<div class="brand">CATS</div>
+		<div class="brand-sub">Course Application Tracking System</div>
+	</header>
+	<main class="page">
+		<section class="card narrow">
+			<h1>Administrator login</h1>
+			<p class="lede">Administrators sign in here.</p>
+			<p class="error" th:if="${error}" th:text="${error}"></p>
+			<form class="stack" th:action="@{/admin/login}" method="post">
+				<label for="userId">User id</label>
+				<input id="userId" name="userId" th:value="${userId}" autocomplete="username" required autofocus>
+				<label for="password">Password</label>
+				<input id="password" name="password" type="password" autocomplete="current-password" required>
+				<button type="submit">Sign in</button>
+			</form>
+			<p class="switch"><a th:href="@{/employee/login}">Employee login</a></p>
+			<div class="hint">
+				<p>Sample account</p>
+				<ul>
+					<li>admin / admin123</li>
+				</ul>
+			</div>
+		</section>
+	</main>
+</body>
+</html>

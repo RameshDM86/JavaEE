@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Personal course history · CATS</title>
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+	<header th:replace="~{fragments/header :: bar}"></header>
+	<main class="page wide">
+		<section class="card">
+			<h1 th:text="'Personal course history · ' + ${year}">History</h1>
+			<p class="muted" th:if="${applications.empty}">No course applications for this year.</p>
+			<table th:if="${!applications.empty}">
+				<thead>
+					<tr>
+						<th>Course</th>
+						<th>Category</th>
+						<th>Period</th>
+						<th>Fee</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="course : ${applications}">
+						<td><a th:href="@{/courses/{id}(id=${course.id})}" th:text="${course.title}">Title</a></td>
+						<td th:text="${course.category.label}">Category</td>
+						<td th:text="${course.startDate} + ' to ' + ${course.endDate}">Dates</td>
+						<td th:text="'$' + ${course.fee}">Fee</td>
+						<td th:text="${course.status.label}">Status</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</main>
+</body>
+</html>

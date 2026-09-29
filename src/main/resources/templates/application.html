@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title th:text="${detail.application.title} + ' · CATS'">Application</title>
+	<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+	<header th:replace="~{fragments/header :: bar}"></header>
+	<main class="page">
+		<p class="success" th:if="${message}" th:text="${message}">Saved</p>
+		<ul class="errors" th:if="${errors != null}">
+			<li th:each="error : ${errors}" th:text="${error}">Error</li>
+		</ul>
+		<section class="card">
+			<h1 th:text="${detail.application.title}">Title</h1>
+			<p class="lede" th:text="${detail.application.status.label}">Status</p>
+			<dl class="details">
+				<div>
+					<dt>Employee</dt>
+					<dd th:text="${detail.application.employee.name}">Name</dd>
+				</div>
+				<div>
+					<dt>Category</dt>
+					<dd th:text="${detail.application.category.label}">Category</dd>
+				</div>
+				<div>
+					<dt>Provider</dt>
+					<dd th:text="${detail.application.provider}">Provider</dd>
+				</div>
+				<div>
+					<dt>Period</dt>
+					<dd th:text="${detail.application.startDate} + ' to ' + ${detail.application.endDate}">Dates</dd>
+				</div>
+				<div>
+					<dt>Session</dt>
+					<dd th:text="${detail.application.sessionType.label}">Session</dd>
+				</div>
+				<div>
+					<dt>Training days</dt>
+					<dd th:text="${detail.trainingDays}">1</dd>
+				</div>
+				<div>
+					<dt>Fee</dt>
+					<dd th:text="'$' + ${detail.application.fee}">0</dd>
+				</div>
+				<div>
+					<dt>Justification</dt>
+					<dd th:text="${detail.application.justification}">Reason</dd>
+				</div>
+				<div>
+					<dt>Work dissemination</dt>
+					<dd th:text="${detail.application.dissemination != null and !#strings.isEmpty(detail.application.dissemination)} ? ${detail.application.dissemination} : 'None'">None</dd>
+				</div>
+				<div>
+					<dt>Manager's reason</dt>
+					<dd th:text="${detail.application.managerComment != null} ? ${detail.application.managerComment} : 'Not decided yet'">Comment</dd>
+				</div>
+				<div th:if="${detail.application.experienceComment != null}">
+					<dt>Experience</dt>
+					<dd th:text="${detail.application.experienceComment}">Experience</dd>
+				</div>
+			</dl>
+			<p class="muted" th:if="${detail.usage != null}">
+				This year the employee has used
+				<span th:text="${detail.usage.daysUsed}">0</span>
+				of
+				<span th:text="${detail.usage.dayEntitlement}">0</span>
+				training days and
+				$<span th:text="${detail.usage.budgetUsed}">0</span>
+				of
+				$<span th:text="${detail.usage.annualBudget}">0</span>.
+			</p>
+		</section>
+
+		<section class="card" th:if="${managerView and !detail.otherApproved.empty}">
+			<h2>Other approved courses in this period</h2>
+			<ul>
+				<li th:each="other : ${detail.otherApproved}"
+					th:text="${other.employee.name} + ' · ' + ${other.title} + ' · ' + ${other.startDate} + ' to ' + ${other.endDate}">Clash</li>
+			</ul>
+		</section>
+
+		<section class="card actions" th:if="${detail.canUpdate or detail.canDelete or detail.canCancel}">
+			<a class="link-button" th:if="${detail.canUpdate}" th:href="@{/courses/{id}/edit(id=${detail.application.id})}">Update</a>
+			<form th:if="${detail.canDelete}" th:action="@{/courses/{id}/delete(id=${detail.application.id})}" method="post">
+				<button class="danger" type="submit">Delete</button>
+			</form>
+			<form th:if="${detail.canCancel}" th:action="@{/courses/{id}/cancel(id=${detail.application.id})}" method="post">
+				<button class="secondary" type="submit">Cancel course</button>
+			</form>
+		</section>
+
+		<section class="card" th:if="${detail.canComplete}">
+			<h2>Mark as completed</h2>
+			<form class="stack" th:action="@{/courses/{id}/complete(id=${detail.application.id})}" method="post">
+				<label for="experience">Experience comments</label>
+				<textarea id="experience" name="experience" required maxlength="1000"></textarea>
+				<button type="submit">Mark completed</button>
+			</form>
+		</section>
+
+		<section class="card" th:if="${detail.canDecide}">
+			<h2>Decision</h2>
+			<p class="muted">A reason is required when you approve or reject.</p>
+			<form class="stack" th:action="@{/manager/courses/{id}/decide(id=${detail.application.id})}" method="post">
+				<label for="comment">Reason</label>
+				<textarea id="comment" name="comment" required maxlength="1000"></textarea>
+				<div class="actions">
+					<button type="submit" name="decision" value="approve">Approve</button>
+					<button class="danger" type="submit" name="decision" value="reject">Reject</button>
+				</div>
+			</form>
+		</section>
+	</main>
+</body>
+</html>
